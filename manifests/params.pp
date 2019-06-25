@@ -10,19 +10,22 @@
 class fstab::params {
 
   case $::osfamily {
-    'Debian': { 
-      $nfs_client_package = ['nfs-common',] 
-      $nfs_server_package = ['nfs-kernel-server',] 
+    'Debian': {
+      $nfs_client_package = ['nfs-common',]
+      $nfs_server_package = ['nfs-kernel-server',]
     }
     'RedHat': { # Packages for RHEL6 are different than RHEL7
-      $nfs_server_package = $::lsbmajdistrelease ?  {
-        '6' =>  ['nfs-utils', 'nfs-utils-lib'],
-        '7' =>  ['nfs-utils', 'libnfsidmap'],
-      }   
-      $nfs_client_package = $::lsbmajdistrelease ?  {
+      $nfs_server_package = $::operatingsystemmajrelease ?  {
         '6' =>  ['nfs-utils', 'nfs-utils-lib'],
         '7' =>  ['nfs-utils', 'libnfsidmap'],
       }
+      $nfs_client_package = $::operatingsystemmajrelease ?  {
+        '6' =>  ['nfs-utils', 'nfs-utils-lib'],
+        '7' =>  ['nfs-utils', 'libnfsidmap'],
+      }
+    }
+    default: {
+      fail("Unsupported osfamily (${::osfamily})")
     }
   }
 
