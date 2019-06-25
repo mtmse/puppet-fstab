@@ -21,7 +21,7 @@ class fstab(
   $cifspackage = $::fstab::params::cifspackage
 
   if $manage_nfs {
-    package { $nfs_client_package:
+    package { $nfspackage:
       ensure => $nfs_version
     }
     # Ensure that nfs packages are installed before setting up a mount
@@ -35,11 +35,11 @@ class fstab(
     # Ensure that nfs packages are installed before setting up a mount
     Package[$cifspackage] -> Fstab::Mount<||>
   }
-  
+
   if !empty($mounts) {
     create_resources('fstab::mount', $mounts)
   }
-  
+
   if !empty($exports) {
     create_resources('fstab::export', $exports)
   }
